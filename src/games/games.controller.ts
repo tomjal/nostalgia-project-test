@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseFilters } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseFilters, UseGuards } from '@nestjs/common';
 import { HttpExceptionFilter } from './../shared/filters';
 import { Game } from "./games.schema";
 import { GamesService } from './games.service';
 import { CreateGameDto, UpdateGameDto } from './games.dto';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('games')
 @ApiTags('games')
@@ -24,6 +25,7 @@ export class GamesController {
         return this.gamesService.findOne(id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     @ApiCreatedResponse({ description: 'Game created successfully.' })
     @ApiUnprocessableEntityResponse({ description: 'Game title already exists.' })
@@ -31,6 +33,7 @@ export class GamesController {
         return await this.gamesService.create(gameDto);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     @ApiOkResponse({ description: 'Game deleted successfully.' })
     @ApiNotFoundResponse({ description: 'Game not found.' })
@@ -38,6 +41,7 @@ export class GamesController {
         return this.gamesService.delete(id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Put(':id')
     @ApiOkResponse({ description: 'Game updated successfully.' })
     @ApiNotFoundResponse({ description: 'Game not found.' })

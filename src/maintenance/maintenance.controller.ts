@@ -1,7 +1,8 @@
-import { Controller, Get, UseFilters } from '@nestjs/common';
+import { Controller, Get, UseFilters, UseGuards } from '@nestjs/common';
 import { HttpExceptionFilter } from 'src/shared/filters';
 import { MaintenanceService } from './maintenance.service';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('maintenance')
 @ApiTags('maintenance')
@@ -9,6 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class MaintenanceController {
     constructor(private maintenanceService: MaintenanceService) { }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get("/dropdb")
     async dropDB() {
         this.maintenanceService.dropDB();
