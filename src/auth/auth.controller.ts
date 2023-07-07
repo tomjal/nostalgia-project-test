@@ -1,15 +1,20 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthTokenDto } from './authTokenDto';
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
+    private readonly logger = new Logger(AuthService.name);
 
     @UseGuards(AuthGuard('local'))
     @Post('login')
-    async getAccessToken(@Request() req: Request) {
-        const accessToken = this.authService.getAccessToken(req.body);
-        return accessToken;
+    async getAccessTokens(@Request() req: Request): Promise<AuthTokenDto> {
+        const tokens: AuthTokenDto = await this.authService.getAccessToken(req.body);
+        await this.authService.updateRefreshTokenInDB(
+            req.body['username'], tokens.refreshToken
+        );
+        return tokens;
     }
 }

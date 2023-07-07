@@ -15,7 +15,7 @@ export class BaseGameDto {
     @IsString({each: true})
     @IsOptional()
     @ApiPropertyOptional()
-    picturesLinks?: Array<number>;
+    picturesLinks?: Array<string>;
     @IsString()
     @MinLength(3)
     @MaxLength(256)

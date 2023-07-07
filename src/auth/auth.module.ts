@@ -7,7 +7,8 @@ import { UsersService } from "../users/users.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserSchema } from "../users/users.schema";
 import { LocalStrategy } from './local.strategy';
-import { JwtStrategy } from "./jwt.strategy";
+import { JwtStrategy } from "./accessToken.strategy";
+import { RefreshTokenStrategy } from "./refreshToken.strategy";
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { JwtStrategy } from "./jwt.strategy";
       signOptions: { expiresIn: '60s' },
     }),
     MongooseModule.forFeature([{ name: "user", schema: UserSchema }])],
-  providers: [AuthService, UsersService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, UsersService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
   controllers: [AuthController],
 })
 export class AuthModule { }
