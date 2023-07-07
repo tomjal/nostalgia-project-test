@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotAcceptableException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotAcceptableException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -23,7 +23,8 @@ export class AuthService {
         }
         return null;
     }
-    async getAccessToken(user): Promise<AuthTokenDto> {
+
+    async getAccessTokens(user): Promise<AuthTokenDto> {
         const payload = { username: user.username };
 
         return {
@@ -35,19 +36,25 @@ export class AuthService {
                 })
         };
     }
+
     async updateRefreshTokenInDB(username, refreshToken) {
         this.usersService.findAndUpdateUser(username, { refreshToken });
     }
 
-    /*async updateRefreshToken(userId: string, refreshToken: string) {
-        const hashedRefreshToken = await bcrypt.hash(refreshToken);
-        await this.usersService.findAndUpdateUser(
-            {
-                refreshToken: hashedRefreshToken
-            });
+    async refreshTokens(username: string, refreshToken: string) {
+        const user = await this.usersService.findOneByUsername(username);
+        if (!user || !user.refreshToken)
+            throw new ForbiddenException('Access Denied');
+            
+        const refreshDifferences = user.refreshToken.localeCompare(refreshToken);
+
+        if (refreshDifferences !== 0) throw new ForbiddenException('Access Denied');
+        const tokens = await this.getAccessTokens({ username });
+        await this.updateRefreshTokenInDB(username, tokens.refreshToken);
+        return tokens;
     }
 
-    storeTokenInCookie(res: ResponseType, authToken: AuthTokenDto) {
+    /*storeTokenInCookie(res: ResponseType, authToken: AuthTokenDto) {
         res.cookie('access_token', authToken.accessToken, { maxAge: 1000 * 60 * 15, httpOnly: true });
         res.cookie('refresh_token', authToken.refreshToken, { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true });
     }*/

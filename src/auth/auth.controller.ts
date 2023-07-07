@@ -11,10 +11,20 @@ export class AuthController {
     @UseGuards(AuthGuard('local'))
     @Post('login')
     async getAccessTokens(@Request() req: Request): Promise<AuthTokenDto> {
-        const tokens: AuthTokenDto = await this.authService.getAccessToken(req.body);
+        const tokens: AuthTokenDto = await this.authService.getAccessTokens(req.body);
         await this.authService.updateRefreshTokenInDB(
             req.body['username'], tokens.refreshToken
         );
         return tokens;
     }
+
+    @UseGuards(AuthGuard('jwt-refresh'))
+    @Get('refresh')
+    refreshTokens(@Request() req: Request) {
+        const username = req.body['username'];
+        const refreshToken = req.body['refreshToken'];
+        this.logger.log(`Token refresh initiated by ${username}`);
+        return this.authService.refreshTokens(username, refreshToken);
+    }
+
 }
