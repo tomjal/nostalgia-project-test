@@ -1,0 +1,34 @@
+version: '3.8' # specify docker-compose version
+
+# Define the services/containers to be run
+services:  
+  app:
+    container_name: node_app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - IS_CONTAINER=mongo
+    networks:
+      - backend
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+  mongodb: 
+    container_name: mongo
+    image: mongo 
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend   
+     
+volumes:
+  mongodata:  
+
+networks:
+  backend:
+    driver: bridge
