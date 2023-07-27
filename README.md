@@ -1,3 +1,7 @@
+## MongoDB string for development
+
+mongodb://localhost:27017/nest
+
 ## Installation
 
 ```bash

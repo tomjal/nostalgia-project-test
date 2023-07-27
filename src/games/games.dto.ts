@@ -1,6 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEnum, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { GamePlatformType, GameType } from "src/shared/enums";
+import {
+    GamePlatformType, GameType, GameGraphics,
+    GameFramerate, GameController, GameExternalMonitor
+} from "src/shared/enums";
 
 export class BaseGameDto {
     @IsString()
@@ -12,7 +15,7 @@ export class BaseGameDto {
     @IsOptional()
     @ApiPropertyOptional()
     year?: number;
-    @IsString({each: true})
+    @IsString({ each: true })
     @IsOptional()
     @ApiPropertyOptional()
     picturesLinks?: Array<string>;
@@ -34,6 +37,32 @@ export class BaseGameDto {
         enum: GamePlatformType,
     })
     platform?: GamePlatformType;
+    @IsOptional()
+    @ApiPropertyOptional({
+        enum: GameGraphics,
+    })
+    graphics?: GameGraphics;
+    @IsOptional()
+    @ApiPropertyOptional({
+        enum: GameFramerate,
+    })
+    framerate?: GameFramerate;
+    @IsOptional()
+    @ApiPropertyOptional({
+        enum: GameController,
+    })
+    controller?: GameController;
+    @IsOptional()
+    @ApiPropertyOptional({
+        enum: GameExternalMonitor,
+    })
+    externalMonitor?: GameExternalMonitor;
+    @IsString()
+    @MinLength(3)
+    @MaxLength(500)
+    @IsOptional()
+    @ApiPropertyOptional()
+    steamDbLink?: string;
 }
 
 export class CreateGameDto extends BaseGameDto { }

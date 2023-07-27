@@ -10,7 +10,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - IS_CONTAINER=mongo
+      - CONTAINER_MONGO_NAME=mongo
     networks:
       - backend
     depends_on:

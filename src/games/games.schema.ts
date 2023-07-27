@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { GamePlatformType, GameType } from 'src/shared/enums';
+import {
+    GameController, GameExternalMonitor, GameFramerate,
+    GameGraphics, GamePlatformType, GameType
+} from 'src/shared/enums';
 
 export type GameDocument = HydratedDocument<Game>;
 
@@ -18,6 +21,16 @@ export class Game {
     genre?: GameType;
     @Prop()
     platform?: GamePlatformType;
+    @Prop()
+    graphics?: GameGraphics;
+    @Prop()
+    framerate?: GameFramerate;
+    @Prop()
+    controller?: GameController;
+    @Prop()
+    externalMonitor?: GameExternalMonitor;
+    @Prop()
+    steamDbLink?: string;
 }
 
 export const GameDocumentSchema = SchemaFactory.createForClass(Game);
