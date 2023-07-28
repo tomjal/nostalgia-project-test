@@ -29,4 +29,15 @@ db.getCollection('games').insertMany([
     'externalMonitor': 'SecondMonitor',
     'steamDbLink': 'https://steamdb.info/app/1229240/',
   },
+  {
+    'title': 'Tomb Raider 3',
+    'picturesLinks': [
+      'https://cdn.cloudflare.steamstatic.com/steam/apps/225320/header.jpg'
+    ],
+    'description': 'Thousands of years ago a meteor crashed into Antarctica and the shockwaves of its impact are being felt in the modern age. Lara Croft will follow clues leading to a deadly secret, boldly leaping chasms and blasting monsters that no one has leaped or blasted before. This time she faces a mystery thats from way out of this world.',
+    'genre': 'TPP',
+    'platform': 'PC',
+    'graphics': '_3D',
+    'steamDbLink': 'https://steamdb.info/app/225320/',
+  }
 ]);
